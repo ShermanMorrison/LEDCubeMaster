@@ -7,7 +7,7 @@
 const int led_num_cycles = 12;
 const char col_array[5] = {BIT0, BIT3, 0x00, BIT6, BIT7};
 const char row_array[5] = {BIT0, BIT1, BIT2, BIT3, BIT4};
-int pwm_array[5][5] = {
+char pwm_array[5][5] = {
 		{10,		0,		0,		0,		0},
 		{0,			10,		0,		0,		0},
 		{0,			0,		 10, 	0,		0},
