@@ -22,25 +22,22 @@ void main(void){
 
 	WDTCTL = WDTPW + WDTHOLD;	// Stop WDT
 
-	P1OUT &= (BIT0 + BIT3 + BIT6 + BIT7);
-	P1DIR |= (BIT0 + BIT3 + BIT6 + BIT7);
+	P1SEL  =   BIT2    |   BIT4;	//enable UCA0 transmit and clock
+	P1SEL2 =   BIT2    |   BIT4;
 
-	P2OUT &= (BIT5 + BIT0 + BIT1 + BIT2 + BIT3 + BIT4);
-	P2DIR |= (BIT5 + BIT0 + BIT1 + BIT2 + BIT3 + BIT4);
+	P2DIR |= (BIT0 + BIT1 + BIT2 + BIT3 + BIT4);
 
 	BCSCTL3 |= LFXT1S_2;					// Set clock source to VLO
 	BCSCTL2 |= SELM_3 + SELS;          		// SMCLK  = MCLK = VLO = 12KHz
 
-	P1SEL  =   BIT2    |   BIT4;	//enable UCA0 transmit and clock
-	P1SEL2 =   BIT2    |   BIT4;
-
 	UCA0CTL1   =   UCSWRST;
-	UCA0CTL0   |=  UCCKPH  +   UCMSB   +   UCMST   +   UCSYNC + UCMODE0; //  3-pin,  8-bit   SPI master
-	UCA0CTL1   |=  UCSSEL_1;   //  ACLK
+	UCA0CTL0   |=  UCCKPH  +   UCMSB   +   UCMST   +   UCSYNC + UCMODE0; //  4-pin with SS enable high,  8-bit   SPI master
+	UCA0CTL1   |=  UCSSEL_2;   //  SMCLK
 	UCA0BR0    |=  0x00;   //don't prescale Baud rate
 	UCA0BR1    =   0;  //don't prescale Baud rate
 	UCA0MCTL   =   0;  //  No  modulation
 	UCA0CTL1   &=  ~UCSWRST;   //  **Initialize    USCI    state   machine**
+
 
 	while(1){
 
@@ -66,6 +63,7 @@ void main(void){
 		int index;
 		for (index=0; index<5;index++){
 			for (k=0;k<1; k++){
+				P2OUT |= BIT0;
 				for (c=0; c<5; c++){
 					for (r=0; r<5; r++){
 						//PWM all lights
